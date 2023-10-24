@@ -40,25 +40,44 @@ jobs:
         dotnet format --severity info --verify-no-changes --no-restore
         exit 0
 
-    - name: Build linux 
-      run: msBuild src/SyncClipboard.Desktop/SyncClipboard.Desktop.csproj /p:Configuration=Release /t:Publish /v:m /p:Platform=x64 /p:RuntimeIdentifier=linux-x64 /p:SelfContained=false
+    - name: Build linux
+      run: |
+        msBuild SyncClipboard.Desktop/SyncClipboard.Desktop.csproj /p:Configuration=Release /t:Publish /v:m /p:Platform=x64 /p:RuntimeIdentifier=linux-x64 /p:SelfContained=false /p:OutDir=../../linux-no-self-contained
+        msBuild SyncClipboard.Desktop/SyncClipboard.Desktop.csproj /p:Configuration=Release /t:Publish /v:m /p:Platform=x64 /p:RuntimeIdentifier=linux-x64 /p:SelfContained=true /p:OutDir=../../linux-self-contained
+      working-directory: ./src
 
-    - name: copy linux 
-      run: xcopy src\SyncClipboard.Desktop\bin\x64\Release\net6.0\linux-x64\publish linux\ /s /e
+
+    - name: copy LICENSES 
+      run: |
+        xcopy LICENSES linux-no-self-contained\LICENSES\ /s /e
+        xcopy LICENSES linux-self-contained\LICENSES\ /s /e
 
     - name: Generate change log
       run: |
-        .\PreRelease.bat
+        .\ReadDesktopChanges.bat
         type feature.txt
+      working-directory: ./build
 
-    - name: Upload build artifacts SyncClipboard.WinUI3
+    - name: Upload linux-no-self-contained
       uses: actions/upload-artifact@v3
       with:
-        name: SyncClipboard.linux
-        path: linux/
+        name: linux-no-self-contained
+        path: linux-no-self-contained/
+
+    - name: Upload linux-self-contained
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux-self-contained
+        path: linux-self-contained/
 
     - name: Upload change log
       uses: actions/upload-artifact@v3
       with:
         name: feature
-        path: feature.txt
+        path: build/feature.txt
+
+    - name: Upload version
+      uses: actions/upload-artifact@v3
+      with:
+        name: version
+        path: build/version.txt

@@ -1,0 +1,71 @@
+name: linux-package
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore: 
+      - 'v*'
+  pull_request:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-progress.yml
+
+  package:
+    strategy:
+      matrix:
+        type: [self-contained, no-self-contained]
+        package-type: [AppImage, rpm, deb]
+
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: Jeric-X/SyncClipboard
+          ref: avalonia
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Download last-job-built artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: linux-${{ matrix.type }}
+          path: linux-${{ matrix.type }}/
+
+      - name: Download version
+        uses: actions/download-artifact@v3
+        with:
+          name: version
+
+      - name: Read version
+        id: version
+        uses: jaywcjlove/github-action-read-file@main
+        with:
+          path: version.txt
+
+      - name: Install pupnet and denpendencies
+        run: |
+          dotnet tool install -g KuiperZone.PupNet
+          sudo apt install libfuse2
+
+      - name: Package
+        run: | 
+          chmod +x PostPublish-${{ matrix.type }}.sh
+          pupnet linux-${{ matrix.type }}.pupnet.conf --app-version ${{ steps.version.outputs.content }} --kind ${{ matrix.package-type }} -y
+        working-directory: ./build
+
+      - name: Upload build artifacts ${{ matrix.type }} ${{ matrix.package-type }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.type }}-${{ matrix.package-type }}
+          path: build/output/SyncClipboard-${{ steps.version.outputs.content }}-1.x86_64.${{ matrix.package-type }}
+
