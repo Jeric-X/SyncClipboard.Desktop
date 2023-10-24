@@ -49,9 +49,9 @@ jobs:
 
       - name: Read version
         id: version
-        uses: andstor/file-reader-action@v1
+        uses: juliangruber/read-file-action@v1
         with:
-          path: "version.txt"
+          path: version.txt
 
       - name: Install pupnet and denpendencies
         run: |
@@ -61,7 +61,7 @@ jobs:
       - name: Package
         run: | 
           chmod +x PostPublish-${{ matrix.type }}.sh
-          pupnet linux-${{ matrix.type }}.pupnet.conf --app-version ${{ steps.version.outputs.contents }} --kind ${{ matrix.package-type }} -y
+          pupnet linux-${{ matrix.type }}.pupnet.conf --app-version ${{ steps.version.outputs.content }} --kind ${{ matrix.package-type }} -y
         working-directory: ./build
 
       - name: Upload build artifacts ${{ matrix.type }} ${{ matrix.package-type }}
