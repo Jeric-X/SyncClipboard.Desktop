@@ -20,6 +20,16 @@ jobs:
       matrix:
         type: [self-contained, no-self-contained]
         package-type: [AppImage, rpm, deb]
+        include:
+          - package-type: AppImage
+            package-head: SyncClipboard
+            package-tail: x86_64
+          - package-type: rpm
+            package-head: syncclipboard
+            package-tail: x86_64
+          - package-type: deb
+            package-head: syncclipboard
+            package-tail: amd64
 
     runs-on: ubuntu-latest
     needs: build
@@ -68,5 +78,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.type }}-${{ matrix.package-type }}
-          path: build/output/SyncClipboard-${{ steps.version.outputs.content }}-1.x86_64.${{ matrix.package-type }}
+          path: build/output/${{ matrix.package-head }}-${{ steps.version.outputs.content }}-1.${{ matrix.package-tail }}.${{ matrix.package-type }}
 
