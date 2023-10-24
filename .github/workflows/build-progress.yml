@@ -44,7 +44,7 @@ jobs:
       run: msBuild src/SyncClipboard.Desktop/SyncClipboard.Desktop.csproj /p:Configuration=Release /t:Publish /v:m /p:Platform=x64 /p:RuntimeIdentifier=linux-x64 /p:SelfContained=false
 
     - name: copy linux 
-      run: xcopy src/SyncClipboard.Desktop/bin/x64/Release/net6.0/linux-x64/publish/ linux\ /s /e
+      run: xcopy src/SyncClipboard.Desktop/bin/x64/Release/net6.0/linux-x64/publish linux\ /s /e
 
     - name: Generate change log
       run: |
