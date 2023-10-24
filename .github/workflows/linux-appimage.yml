@@ -1,0 +1,51 @@
+name: linux-appimage
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore: 
+      - 'v*'
+  pull_request:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-progress.yml
+
+  package:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: Jeric-X/SyncClipboard
+          ref: avalonia
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Download last-job-built artifact SyncClipboard.linux
+        uses: actions/download-artifact@v3
+        with:
+          name: SyncClipboard.linux
+          path: linux/
+
+      - name: install pupnet
+        run: dotnet tool install -g KuiperZone.PupNet
+
+      - name: package appimage
+        run: pupnet --kind appimage -y
+        working-directory: ./build
+
+      - name: Upload build artifacts SyncClipboard.linux
+        uses: actions/upload-artifact@v3
+        with:
+          name: SyncClipboard.linux
+          path: build/output/
+
