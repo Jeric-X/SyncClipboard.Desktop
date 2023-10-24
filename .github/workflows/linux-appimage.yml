@@ -40,6 +40,10 @@ jobs:
         run: dotnet tool install -g KuiperZone.PupNet
 
       - name: package appimage
+        run: chmod +x PostPublish.sh
+        working-directory: ./build
+
+      - name: package appimage
         run: pupnet --kind appimage -y
         working-directory: ./build
 
