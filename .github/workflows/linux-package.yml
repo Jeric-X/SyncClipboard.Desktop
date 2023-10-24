@@ -23,13 +23,13 @@ jobs:
         include:
           - package-type: AppImage
             package-head: SyncClipboard-
-            package-tail: x86_64
+            package-tail: .x86_64
           - package-type: rpm
             package-head: syncclipboard_
-            package-tail: x86_64
+            package-tail: .x86_64
           - package-type: deb
             package-head: syncclipboard_
-            package-tail: amd64
+            package-tail: _amd64
 
     runs-on: ubuntu-latest
     needs: build
@@ -77,6 +77,6 @@ jobs:
       - name: Upload build artifacts ${{ matrix.type }} ${{ matrix.package-type }}
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.package-head }}${{ steps.version.outputs.content }}-1.${{ matrix.package-tail }}.${{ matrix.package-type }}
-          path: build/output/${{ matrix.package-head }}${{ steps.version.outputs.content }}-1.${{ matrix.package-tail }}.${{ matrix.package-type }}
+          name: SyncClipboard_${{ steps.version.outputs.content }}_${{ matrix.type }}${{ matrix.package-tail }}.${{ matrix.package-type }}
+          path: build/output/${{ matrix.package-head }}${{ steps.version.outputs.content }}-1${{ matrix.package-tail }}.${{ matrix.package-type }}
 
