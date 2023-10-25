@@ -138,4 +138,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: SyncClipboard_${{ steps.version.outputs.content }}_macos_${{ matrix.type }}
-          path: build/macos/SyncClipboard ${{ steps.version.outputs.content }}.dmp
+          path: "build/macos/SyncClipboard ${{ steps.version.outputs.content }}.dmp"
