@@ -7,8 +7,8 @@ jobs:
   build:
     strategy:
       matrix:
-        # os: [osx, linux]
-        os: [osx]
+        os: [osx, linux]
+        # os: [osx]
         cpu: [x64]
         type: [self-contained, no-self-contained]
         include:
