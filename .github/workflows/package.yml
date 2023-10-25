@@ -1,4 +1,4 @@
-name: linux-package
+name: package
 
 permissions:
   contents: write
@@ -15,7 +15,7 @@ jobs:
   build:
     uses: ./.github/workflows/build-progress.yml
 
-  package:
+  package-linux:
     strategy:
       matrix:
         cpu: [x64]
@@ -81,3 +81,52 @@ jobs:
           name: SyncClipboard_${{ steps.version.outputs.content }}_${{ matrix.type }}${{ matrix.package-tail }}.${{ matrix.package-type }}
           path: build/linux/output/${{ matrix.package-head }}${{ steps.version.outputs.content }}-1${{ matrix.package-tail }}.${{ matrix.package-type }}
 
+  package-macos:
+    strategy:
+      matrix:
+        cpu: [x64]
+        type: [self-contained, no-self-contained]
+
+    runs-on: macos-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: Jeric-X/SyncClipboard
+          ref: avalonia
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Download last-job-built artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: osx-${{ matrix.cpu }}-${{ matrix.type }}
+          path: macos-bin/
+
+      - name: Download version
+        uses: actions/download-artifact@v3
+        with:
+          name: version
+          path: ./
+
+      - name: Read version
+        id: version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: version.txt
+
+      - name: Package
+        run: | 
+          chmod +x buildAppBundle.sh
+          ./buildAppBundle.sh 
+        working-directory: ./build/macos
+
+      - name: Upload build artifacts ${{ matrix.type }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: SyncClipboard_${{ steps.version.outputs.content }}_${{ matrix.type }}
+          path: build/macos/SyncClipboard.app/
