@@ -18,7 +18,8 @@ jobs:
   package-linux:
     strategy:
       matrix:
-        cpu: [x64, arm64]
+        cpu: [x64]
+        # cpu: [x64, arm64]   # rpmbuild arm64 failed
         type: [self-contained, no-self-contained]
         package-type: [AppImage, rpm, deb]
         include:
@@ -37,7 +38,7 @@ jobs:
           - package-type: AppImage
             cpu: arm64
             package-head: SyncClipboard-
-            package-tail: .arm64
+            package-tail: .aarch64
           - package-type: rpm
             cpu: arm64
             package-head: syncclipboard_
