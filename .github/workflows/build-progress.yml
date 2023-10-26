@@ -9,7 +9,7 @@ jobs:
       matrix:
         os: [osx, linux]
         # os: [osx]
-        cpu: [x64]
+        cpu: [x64, arm64]
         type: [self-contained, no-self-contained]
         include:
            - type: self-contained
@@ -52,6 +52,8 @@ jobs:
         dotnet format --severity info --verify-no-changes --no-restore
         exit 0
 
+    # - name
+        #  msBuild SyncClipboard.Desktop/SyncClipboard.Desktop.csproj /p:RuntimeIdentifier=osx-arm64 /p:Platform=ARM64 /p:SelfContained=false /p:OutDir=../../osx-arm64-no-self-contained /p:Configuration=Release /t:Publish /v:m  
     - name: Build ${{ matrix.os }}-${{ matrix.cpu }}-${{ matrix.type }} 
       run: |
         msBuild SyncClipboard.Desktop/SyncClipboard.Desktop.csproj /p:RuntimeIdentifier=${{ matrix.os }}-${{ matrix.cpu }} /p:Platform=${{ matrix.cpu }} /p:SelfContained=${{ matrix.ifSelf }} /p:OutDir=../../${{ matrix.os }}-${{ matrix.cpu }}-${{ matrix.type }} /p:Configuration=Release /t:Publish /v:m  
