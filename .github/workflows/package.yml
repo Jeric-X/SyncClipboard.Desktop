@@ -16,5 +16,5 @@ jobs:
     uses: Jeric-X/SyncClipboard/.github/workflows/desktop-package.yml@avalonia
     with:
       release-repo: ${{ github.repository }}
-      checkout-repo: Jeric-X/SyncClipboard
-      checkout-ref: avalonia
+      checkout-repo: 'Jeric-X/SyncClipboard'
+      checkout-ref: 'avalonia'
