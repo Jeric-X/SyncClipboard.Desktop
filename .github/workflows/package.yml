@@ -16,4 +16,4 @@ jobs:
     uses: Jeric-X/SyncClipboard/.github/workflows/desktop-package.yml@avalonia
     with:
       checkout-repo: 'Jeric-X/SyncClipboard'
-      checkout-ref: 'avalonia'
+      checkout-ref: 'master'
