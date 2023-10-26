@@ -87,7 +87,7 @@ jobs:
       - name: Package
         run: | 
           chmod +x PostPublish.sh
-          pupnet linux.pupnet.conf --app-version ${{ steps.version.outputs.content }} --kind ${{ matrix.package-type }} -y
+          pupnet linux.pupnet.conf --app-version ${{ steps.version.outputs.content }} --kind ${{ matrix.package-type }} -r linux-${{ matrix.cpu }} -y
         working-directory: ./build/linux
 
       - name: Upload build artifacts ${{ matrix.type }} ${{ matrix.package-type }}
