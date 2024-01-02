@@ -12,8 +12,14 @@ on:
   pull_request:
 
 jobs:
-  build:
-    uses: Jeric-X/SyncClipboard/.github/workflows/desktop-package.yml@master
+  linux:
+    uses: Jeric-X/SyncClipboard/.github/workflows/linux-release.yml@ci
     with:
       checkout-repo: 'Jeric-X/SyncClipboard'
-      checkout-ref: 'master'
+      checkout-ref: 'ci'
+
+  mac:
+    uses: Jeric-X/SyncClipboard/.github/workflows/mac-release.yml@ci
+    with:
+      checkout-repo: 'Jeric-X/SyncClipboard'
+      checkout-ref: 'ci'
