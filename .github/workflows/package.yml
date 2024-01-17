@@ -12,14 +12,22 @@ on:
   pull_request:
 
 jobs:
+  prebuild:
+    uses: Jeric-X/SyncClipboard/.github/workflows/prebuild.yml@master
+    with:
+      checkout-repo: 'Jeric-X/SyncClipboard'
+      checkout-ref: 'master'
+
   linux:
     uses: Jeric-X/SyncClipboard/.github/workflows/linux-release.yml@master
+    needs: prebuild
     with:
       checkout-repo: 'Jeric-X/SyncClipboard'
       checkout-ref: 'master'
 
   mac:
     uses: Jeric-X/SyncClipboard/.github/workflows/mac-release.yml@master
+    needs: prebuild
     with:
       checkout-repo: 'Jeric-X/SyncClipboard'
       checkout-ref: 'master'
